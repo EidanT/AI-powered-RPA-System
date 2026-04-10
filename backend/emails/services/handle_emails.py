@@ -22,22 +22,23 @@ def send_email(category, gmail, name, snippet):
     msg["From"]    = FROM
     msg["To"]      = TO
 
+
+    ticket_id = f"{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:6].upper()}"
+    reference = f"HHRR-{ticket_id}"
+
     if category == "hhrr":
         msg["Subject"] = "Application confirmed"
         html_template_file = "hhrr.html"
     elif category == "client":
         msg["Subject"] = "Thank you for contacting us"
         html_template_file = "client.html"
-    else:
-        ticket_id = f"{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:6].upper()}"
+    elif category == "support":
         msg["Subject"] = f"We received your request - Support Ticket #{ticket_id}"
         html_template_file = "support.html"
 
-
     template_path = os.path.join(BASE_DIR, "html_template", html_template_file)
-    reference = f"HHRR-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:6].upper()}"
 
-    with open(template_path) as f:
+    with open(template_path, encoding="utf-8") as f:
         html = f.read()
 
     html = html.replace("{{name}}", name)
